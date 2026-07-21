@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contagem regressiva</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8fafc;
+      --muted: #b8c1d9;
+      --card: rgba(15, 23, 42, .72);
+      --accent: #8b5cf6;
+      --accent-2: #22d3ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #070b18;
+      color: var(--ink);
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      width: 340px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: .35;
+      z-index: -1;
+    }
+
+    body::before { background: var(--accent); top: -120px; left: -160px; }
+    body::after { background: var(--accent-2); bottom: -160px; right: -150px; }
+
+    main {
+      width: min(100%, 440px);
+      padding: clamp(28px, 7vw, 42px);
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 28px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .3);
+      backdrop-filter: blur(18px);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent-2);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 0; font-size: clamp(1.65rem, 7vw, 2.25rem); line-height: 1.1; }
+    .description { margin: 14px auto 28px; color: var(--muted); font-size: .98rem; line-height: 1.5; }
+
+    .timer {
+      padding: 22px 12px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, .2), rgba(34, 211, 238, .13));
+      border: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    #hours {
+      display: block;
+      font-size: clamp(4.3rem, 22vw, 6.5rem);
+      font-weight: 800;
+      line-height: .9;
+      letter-spacing: -.07em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer span:last-child { display: block; margin-top: 12px; color: var(--muted); font-size: .9rem; }
+
+    img {
+      display: block;
+      width: min(100%, 260px);
+      margin: 28px auto 0;
+      border-radius: 18px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Contagem regressiva...</p>
+    <h1>Próximo date:</h1>
+    <p class="description" id="target-text">Calculando o tempo restante...</p>
+
+    <div class="timer" aria-live="polite">
+      <span id="hours">0</span>
+      <span id="label">horas restantes</span>
+    </div>
+
+    <img alt="Desenho de dois patos fazendo carinho um no outro" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 280'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%230d1428'/%3E%3Cstop offset='1' stop-color='%23152436'/%3E%3C/linearGradient%3E%3ClinearGradient id='water' x1='0' x2='1'%3E%3Cstop stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='520' height='280' rx='30' fill='url(%23bg)'/%3E%3Ccircle cx='260' cy='92' r='48' fill='%23f472b6' opacity='.16'/%3E%3Cpath d='M80 220c48-18 96-18 144 0s96 18 144 0 72-18 72-18' fill='none' stroke='url(%23water)' stroke-width='12' stroke-linecap='round' opacity='.75'/%3E%3Cpath d='M99 238c62-18 124-18 186 0 47 14 94 14 136 0' fill='none' stroke='%2322d3ee' stroke-width='7' stroke-linecap='round' opacity='.45'/%3E%3Cg stroke='%230f172a' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M233 177c-27 41-97 43-123 8-18-25-3-58 37-64 34-5 72 11 92 37 5 6 3 13-6 19z' fill='%23fef3c7'/%3E%3Cpath d='M154 128c-20-30 16-64 46-42 18 13 19 40 2 54-14 12-37 8-48-12z' fill='%23fff7d6'/%3E%3Cpath d='M201 122c23-18 50-23 72-7' fill='none' stroke='%23f8fafc' stroke-width='18'/%3E%3Cpath d='M287 177c27 41 97 43 123 8 18-25 3-58-37-64-34-5-72 11-92 37-5 6-3 13 6 19z' fill='%23fde68a'/%3E%3Cpath d='M366 128c20-30-16-64-46-42-18 13-19 40-2 54 14 12 37 8 48-12z' fill='%23fff1bd'/%3E%3Cpath d='M319 122c-23-18-50-23-72-7' fill='none' stroke='%23f8fafc' stroke-width='18'/%3E%3Cpath d='M146 136l-30 12 32 15' fill='%23fb923c'/%3E%3Cpath d='M374 136l30 12-32 15' fill='%23fb923c'/%3E%3Cpath d='M174 182c24 12 48 9 67-6' fill='none' stroke='%23facc15' stroke-width='9' opacity='.55'/%3E%3Cpath d='M346 182c-24 12-48 9-67-6' fill='none' stroke='%23facc15' stroke-width='9' opacity='.55'/%3E%3C/g%3E%3Cg fill='%230f172a'%3E%3Ccircle cx='181' cy='112' r='5'/%3E%3Ccircle cx='339' cy='112' r='5'/%3E%3C/g%3E%3Cg fill='%23f472b6'%3E%3Cpath d='M260 93c-16-24-52-8-39 20 8 17 31 29 39 38 8-9 31-21 39-38 13-28-23-44-39-20z'/%3E%3Ccircle cx='211' cy='88' r='5' opacity='.75'/%3E%3Ccircle cx='309' cy='88' r='5' opacity='.75'/%3E%3C/g%3E%3Cg fill='%23ffffff' opacity='.75'%3E%3Ccircle cx='86' cy='72' r='4'/%3E%3Ccircle cx='435' cy='76' r='3'/%3E%3Ccircle cx='454' cy='148' r='4'/%3E%3Ccircle cx='73' cy='160' r='3'/%3E%3C/g%3E%3C/svg%3E" /> 
+
+    <!-- 
+    Outra versão dos Patos
+    <img alt="Desenho de dois patos fazendo carinho um no outro" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 280'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%230b1020'/%3E%3Cstop offset='1' stop-color='%2319353a'/%3E%3C/linearGradient%3E%3ClinearGradient id='pond' x1='0' x2='1'%3E%3Cstop stop-color='%232dd4bf'/%3E%3Cstop offset='.55' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='520' height='280' rx='30' fill='url(%23bg)'/%3E%3Ccircle cx='260' cy='96' r='72' fill='%23fb7185' opacity='.13'/%3E%3Cpath d='M73 220c42-20 80-20 122 0 41 20 82 20 124 0s84-20 126 0' fill='none' stroke='url(%23pond)' stroke-width='13' stroke-linecap='round' opacity='.72'/%3E%3Cpath d='M103 243c56-15 111-15 167 0 52 14 103 13 147-2' fill='none' stroke='%232dd4bf' stroke-width='7' stroke-linecap='round' opacity='.45'/%3E%3Cg stroke='%230f172a' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M113 179c12-41 70-59 116-38 25 12 40 34 36 54-10 42-85 47-128 21-21-12-29-25-24-37z' fill='%23fef9c3'/%3E%3Cpath d='M407 179c-12-41-70-59-116-38-25 12-40 34-36 54 10 42 85 47 128 21 21-12 29-25 24-37z' fill='%23fde68a'/%3E%3Cpath d='M194 139c-17-35 6-77 40-76 26 1 42 25 38 51-4 27-31 48-57 48-10 0-17-8-21-23z' fill='%23fff7d6'/%3E%3Cpath d='M326 139c17-35-6-77-40-76-26 1-42 25-38 51 4 27 31 48 57 48 10 0 17-8 21-23z' fill='%23fff1bd'/%3E%3Cpath d='M237 128c12 22 34 22 46 0' fill='none' stroke='%23f8fafc' stroke-width='17'/%3E%3Cpath d='M210 120l-31 2 24 24' fill='%23fb923c'/%3E%3Cpath d='M310 120l31 2-24 24' fill='%23fb923c'/%3E%3Cpath d='M158 184c29-4 51 4 68 23' fill='none' stroke='%23facc15' stroke-width='9' opacity='.58'/%3E%3Cpath d='M362 184c-29-4-51 4-68 23' fill='none' stroke='%23facc15' stroke-width='9' opacity='.58'/%3E%3Cpath d='M242 199c7 12 29 12 36 0' fill='none' stroke='%23fbbf24' stroke-width='8' opacity='.7'/%3E%3C/g%3E%3Cg fill='%230f172a'%3E%3Ccircle cx='232' cy='97' r='5'/%3E%3Ccircle cx='288' cy='97' r='5'/%3E%3C/g%3E%3Cg fill='%23fb7185'%3E%3Cpath d='M260 54c-12-18-39-6-30 15 6 13 23 22 30 29 7-7 24-16 30-29 9-21-18-33-30-15z'/%3E%3Cpath d='M143 89c-7-11-23-4-18 8 3 8 13 13 18 17 4-4 14-9 17-17 5-12-11-19-17-8z' opacity='.65'/%3E%3Cpath d='M377 89c7-11 23-4 18 8-3 8-13 13-18 17-4-4-14-9-17-17-5-12 11-19 17-8z' opacity='.65'/%3E%3C/g%3E%3Cg fill='%23ffffff' opacity='.8'%3E%3Ccircle cx='84' cy='72' r='4'/%3E%3Ccircle cx='444' cy='78' r='3'/%3E%3Ccircle cx='460' cy='154' r='4'/%3E%3Ccircle cx='68' cy='150' r='3'/%3E%3C/g%3E%3C/svg%3E" />
+    -->
+
+  </main>
+
+  <script>
+    // Altere esta variável para a data e hora desejadas (formato: AAAA-MM-DDTHH:MM:SS).
+    const dataAlvo = new Date('2026-07-25T15:00:00');
+
+    const hours = document.querySelector('#hours');
+    const label = document.querySelector('#label');
+    const targetText = document.querySelector('#target-text');
+
+    targetText.textContent = `No dia ${dataAlvo.toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' })}.`;
+
+    function atualizarTimer() {
+      const diferenca = dataAlvo.getTime() - Date.now();
+      const horasRestantes = Math.max(0, Math.ceil(diferenca / (1000 * 60 * 60)));
+
+      hours.textContent = horasRestantes.toLocaleString('pt-BR');
+      label.textContent = horasRestantes === 1 ? 'hora restante' : 'horas restantes';
+
+      if (diferenca <= 0) {
+        targetText.textContent = 'A data definida já chegou!';
+        label.textContent = 'horas restantes';
+      }
+    }
+
+    atualizarTimer();
+    setInterval(atualizarTimer, 1000);
+  </script>
+</body>
+</html>
